@@ -18,7 +18,7 @@ export const endOfWeek = (date: Date): Date => {
   return dateEndOfWeek(date, { weekStartsOn: 1 })
 }
 
-// Format date with Danish locale
+// Format date with Danish locale - supports custom format strings
 export const format = (date: Date, formatStr: string): string => {
   return dateFormat(date, formatStr, { locale: danishLocale })
 }
@@ -33,9 +33,10 @@ export const formatCurrency = (amount: number): string => {
   }).format(amount)
 }
 
-// Date formatting for Danish format (DD/MM-YYYY)
-export const formatDate = (date: Date): string => {
-  return dateFormat(date, 'dd/MM-yyyy', { locale: danishLocale })
+// Date formatting for Danish format (DD/MM-YYYY) - default format
+export const formatDate = (date: Date, formatStr?: string): string => {
+  const defaultFormat = 'dd/MM-yyyy'
+  return dateFormat(date, formatStr || defaultFormat, { locale: danishLocale })
 }
 
 // Short date format (DD/MM)

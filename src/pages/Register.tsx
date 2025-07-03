@@ -1,57 +1,18 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
 import { FiMail, FiLock, FiUserPlus } from 'react-icons/fi'
 
 export default function Register() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [error] = useState<string | null>('Registration is currently disabled. Please contact your administrator for access.')
   const navigate = useNavigate()
-  const { signUp } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
-    if (!email || !password || !confirmPassword) {
-      setError('Please fill in all fields')
-      return
-    }
-    
-    if (password !== confirmPassword) {
-      setError('Passwords do not match')
-      return
-    }
-    
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters')
-      return
-    }
-    
-    try {
-      setError(null)
-      setLoading(true)
-      
-      const { error, user } = await signUp(email, password)
-      
-      if (error) {
-        throw error
-      }
-      
-      if (user) {
-        navigate('/')
-      } else {
-        // If user is null but no error, it means email confirmation is required
-        navigate('/login')
-      }
-    } catch (error: any) {
-      console.error('Registration error:', error)
-      setError(error.message || 'Failed to create account')
-    } finally {
-      setLoading(false)
-    }
+    // Registration is disabled - redirect to login
+    navigate('/login')
   }
 
   return (
@@ -59,7 +20,7 @@ export default function Register() {
       <div className="max-w-md w-full space-y-8 bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
         <div>
           <h1 className="text-center text-3xl font-extrabold text-gray-900 dark:text-white">TimeTracker</h1>
-          <h2 className="mt-6 text-center text-2xl font-bold text-gray-900 dark:text-white">Create your account</h2>
+          <h2 className="mt-6 text-center text-2xl font-bold text-gray-900 dark:text-white">Registration Disabled</h2>
         </div>
         
         {error && (
@@ -83,10 +44,10 @@ export default function Register() {
                   name="email"
                   type="email"
                   autoComplete="email"
-                  required
+                  disabled
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none relative block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white dark:bg-gray-700 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
+                  className="appearance-none relative block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white dark:bg-gray-700 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="Email address"
                 />
               </div>
@@ -105,10 +66,10 @@ export default function Register() {
                   name="password"
                   type="password"
                   autoComplete="new-password"
-                  required
+                  disabled
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none relative block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white dark:bg-gray-700 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
+                  className="appearance-none relative block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white dark:bg-gray-700 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="Password"
                 />
               </div>
@@ -127,10 +88,10 @@ export default function Register() {
                   name="confirmPassword"
                   type="password"
                   autoComplete="new-password"
-                  required
+                  disabled
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="appearance-none relative block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white dark:bg-gray-700 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
+                  className="appearance-none relative block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white dark:bg-gray-700 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="Confirm Password"
                 />
               </div>
@@ -140,13 +101,12 @@ export default function Register() {
           <div>
             <button
               type="submit"
-              disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                 <FiUserPlus className="h-5 w-5 text-primary-500 group-hover:text-primary-400" />
               </span>
-              {loading ? 'Creating account...' : 'Sign up'}
+              Go to Sign In
             </button>
           </div>
           

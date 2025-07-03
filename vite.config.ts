@@ -24,7 +24,37 @@ export default defineConfig({
     sourcemap: false,
     // Optimize for production
     minify: 'terser',
-    target: 'es2020'
+    target: 'es2020',
+    // Ensure proper asset handling
+    assetsDir: 'assets',
+    // Fix potential memory issues during build
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom')) {
+              return 'react-vendor'
+            }
+            if (id.includes('recharts')) {
+              return 'charts'
+            }
+            if (id.includes('jspdf')) {
+              return 'pdf'
+            }
+            if (id.includes('date-fns')) {
+              return 'date'
+            }
+            if (id.includes('react-icons')) {
+              return 'icons'
+            }
+            if (id.includes('@supabase')) {
+              return 'supabase'
+            }
+            return 'vendor'
+          }
+        }
+      }
+    }
   },
   // Ensure environment variables are properly loaded
   define: {
@@ -32,12 +62,18 @@ export default defineConfig({
   },
   // Optimize dependencies
   optimizeDeps: {
-    include: ['jspdf', 'jspdf-autotable', 'recharts', '@supabase/supabase-js', 'date-fns']
+    include: ['jspdf', 'jspdf-autotable', 'recharts', '@supabase/supabase-js', 'date-fns'],
+    exclude: []
   },
   // Ensure proper resolution
   resolve: {
     alias: {
       '@': '/src'
     }
+  },
+  // Server configuration for development
+  server: {
+    port: 5173,
+    host: true
   }
 })
